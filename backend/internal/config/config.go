@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"os"
 	"sync"
 
@@ -14,11 +13,17 @@ var (
 )
 
 func parseEnv() error {
-	err := godotenv.Overload("backend/.env")
-	if err != nil {
-		log.Printf("No .env file loaded: %v", err)
+	paths := []string{".env", "backend/.env"}
+	var lastErr error
+	for _, path := range paths {
+		if err := godotenv.Overload(path); err == nil {
+			return nil
+		} else {
+			lastErr = err
+		}
 	}
-	return nil
+
+	return lastErr
 }
 
 func loadConfig() *Config {
