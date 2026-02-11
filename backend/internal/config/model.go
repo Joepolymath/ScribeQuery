@@ -6,4 +6,5 @@ type Config struct {
 	WeaviateHost     string `mapstructure:"WEAVIATE_HOST"`
 	WeaviateAPIKey   string `mapstructure:"WEAVIATE_API_KEY"`
 	WeaviateGrpcHost string `mapstructure:"WEAVIATE_GRPC_HOST"`
+	ORIGINS          string `mapstructure:"ORIGINS"`
 }

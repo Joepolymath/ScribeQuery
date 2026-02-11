@@ -2,10 +2,14 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/Joepolymath/ScribeQuery/internal/config"
 	"github.com/Joepolymath/ScribeQuery/internal/infra/db/vector"
+	"github.com/Joepolymath/ScribeQuery/internal/router"
 	"github.com/weaviate/weaviate-go-client/v5/weaviate/grpc"
 )
 
@@ -35,4 +39,14 @@ func main() {
 	}
 
 	log.Println("Weaviate client connected successfully", weaviateClient)
+
+	app := router.InitRouterWithConfig(cfg)
+
+	go func() {
+		router.RunWithGracefulShutdown(app, cfg)
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 }
