@@ -7,6 +7,8 @@ require github.com/weaviate/weaviate-go-client/v5 v5.6.0
 require (
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.27.1 // indirect
 )
 
 require (

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/Joepolymath/ScribeQuery/internal/config"
-	"github.com/Joepolymath/ScribeQuery/internal/infra/db/vector"
+	vector "github.com/Joepolymath/ScribeQuery/internal/infra/db/vector/weaviate"
 	"github.com/Joepolymath/ScribeQuery/internal/router"
 	"github.com/weaviate/weaviate-go-client/v5/weaviate/grpc"
 )

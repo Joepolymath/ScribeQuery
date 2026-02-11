@@ -1,4 +1,4 @@
-package vector
+package weaviate
 
 import (
 	"errors"
@@ -16,7 +16,6 @@ const (
 	defaultStartupTimeout = 60 * time.Second
 )
 
-// WeaviateConfig defines the minimal connection settings for Weaviate.
 type WeaviateConfig struct {
 	Host           string
 	Scheme         string
