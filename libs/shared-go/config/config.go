@@ -41,6 +41,12 @@ func loadConfig() *Config {
 		WeaviateHost:     os.Getenv("WEAVIATE_HOST"),
 		WeaviateAPIKey:   os.Getenv("WEAVIATE_API_KEY"),
 		WeaviateGrpcHost: os.Getenv("WEAVIATE_GRPC_HOST"),
+		ORIGINS:          os.Getenv("ORIGINS"),
+		OpenAIAPIKey:     os.Getenv("OPENAI_API_KEY"),
+		OpenAIModel:      os.Getenv("OPENAI_MODEL"),
+		LocalHost:        os.Getenv("LOCAL_HOST"),
+		LocalModel:       os.Getenv("LOCAL_MODEL"),
+		Provider:         os.Getenv("PROVIDER"),
 	}
 }
 

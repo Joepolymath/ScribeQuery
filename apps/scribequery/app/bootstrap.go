@@ -13,7 +13,7 @@ type Services struct {
 
 func InitServices(cfg *config.Config, logger *zap.Logger) *Services {
 	chatProviderConfig := &ai.ChatProviderConfig{
-		Provider:     ai.ProviderLocal,
+		Provider:     ai.ProviderOpenAI,
 		OpenAIAPIKey: cfg.OpenAIAPIKey,
 		OpenAIModel:  cfg.OpenAIModel,
 		LocalHost:    cfg.LocalHost,
