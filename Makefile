@@ -105,17 +105,17 @@ clean-system-agent: ## Clean System Agent binaries
 build-ui: ## Build UI Dashboard
 	@echo "Building UI Dashboard..."
 	@if [ -f "$(UI_DASHBOARD_DIR)/package.json" ]; then \
-		cd $(UI_DASHBOARD_DIR) && npm run build; \
+		cd $(UI_DASHBOARD_DIR) && pnpm run build; \
 	else \
 		echo "UI Dashboard not yet implemented"; \
 	fi
 
 run-ui: build-ui ## Run UI Dashboard (production)
-	@cd $(UI_DASHBOARD_DIR) && npm start
+	@cd $(UI_DASHBOARD_DIR) && pnpm preview
 
 dev-ui: ## Run UI Dashboard (development)
 	@if [ -f "$(UI_DASHBOARD_DIR)/package.json" ]; then \
-		cd $(UI_DASHBOARD_DIR) && npm run dev; \
+		cd $(UI_DASHBOARD_DIR) && pnpm run dev; \
 	else \
 		echo "UI Dashboard not yet implemented"; \
 	fi
