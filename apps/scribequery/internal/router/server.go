@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Joepolymath/ScribeQuery/internal/config"
+	"github.com/Joepolymath/DaVinci/apps/scribequery/internal/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )

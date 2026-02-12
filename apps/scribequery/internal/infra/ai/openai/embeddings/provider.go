@@ -3,7 +3,7 @@ package embeddings
 import (
 	"context"
 
-	"github.com/Joepolymath/ScribeQuery/internal/embedding"
+	"github.com/Joepolymath/DaVinci/apps/scribequery/internal/embedding"
 )
 
 type EmbeddingProvider struct {

@@ -1,16 +1,19 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
-	"github.com/Joepolymath/ScribeQuery/internal/config"
-	vector "github.com/Joepolymath/ScribeQuery/internal/infra/db/vector/weaviate"
-	"github.com/Joepolymath/ScribeQuery/internal/router"
-	"github.com/weaviate/weaviate-go-client/v5/weaviate/grpc"
+	"github.com/Joepolymath/DaVinci/apps/scribequery/internal/config"
+	vector "github.com/Joepolymath/DaVinci/apps/scribequery/internal/infra/db/vector/pinecone"
+	"github.com/Joepolymath/DaVinci/apps/scribequery/internal/router"
+	sharedgo "github.com/Joepolymath/DaVinci/libs/shared-go"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -22,23 +25,40 @@ func main() {
 
 	log.Println("Config loaded successfully", cfg)
 
-	weaviateConfig := vector.WeaviateConfig{
-		Host:    cfg.WeaviateHost,
-		Scheme:  cfg.WeaviateScheme,
-		APIKey:  cfg.WeaviateAPIKey,
-		Headers: map[string]string{},
-		Timeout: 10 * time.Second,
-		GrpcConfig: &grpc.Config{
-			Host: cfg.WeaviateGrpcHost,
-		},
+	dimension := 0 // Will use default (1536) if not set
+	if dimStr := os.Getenv("PINECONE_DIMENSION"); dimStr != "" {
+		if d, err := strconv.Atoi(dimStr); err == nil {
+			dimension = d
+		}
 	}
 
-	weaviateClient, err := vector.NewWeaviateClient(weaviateConfig)
+	pineconeConfig := vector.PineconeConfig{
+		APIKey:    os.Getenv("PINECONE_API_KEY"),
+		Host:      os.Getenv("PINECONE_HOST"),
+		Namespace: os.Getenv("PINECONE_NAMESPACE"),
+		Region:    os.Getenv("PINECONE_REGION"),
+		Cloud:     os.Getenv("PINECONE_CLOUD"),
+		Timeout:   10 * time.Second,
+		Dimension: dimension,
+	}
+
+	logger, _ := zap.NewProduction()
+
+	pineconeClient, err := vector.NewPineconeClient(pineconeConfig, logger)
 	if err != nil {
-		log.Fatalf("Failed to create weaviate client: %v", err)
+		log.Fatalf("Failed to create pinecone client: %v", err)
 	}
 
-	log.Println("Weaviate client connected successfully", weaviateClient)
+	if err := pineconeClient.Health(context.Background()); err != nil {
+		log.Printf("Pinecone health check warning: %v", err)
+	}
+	log.Println("Pinecone client connected successfully")
+
+	if err := pineconeClient.CreateIndex(context.Background(), &pineconeConfig, sharedgo.ScribeQueryIndex); err != nil {
+		logger.Info("Index already exists", zap.Error(err))
+	} else {
+		logger.Info("Index created successfully")
+	}
 
 	app := router.InitRouterWithConfig(cfg)
 
