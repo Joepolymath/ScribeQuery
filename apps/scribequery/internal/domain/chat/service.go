@@ -23,3 +23,7 @@ func (s *service) Chat(ctx context.Context, messages []ai.Message) (ai.ChatRespo
 	}
 	return *resp, nil
 }
+
+func (s *service) ChatStream(ctx context.Context, messages []ai.Message, onDelta func(delta ai.ChatStreamDelta) error) error {
+	return s.aiProvider.CompletionStream(ctx, messages, nil, onDelta)
+}
